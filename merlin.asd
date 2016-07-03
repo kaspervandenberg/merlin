@@ -15,5 +15,6 @@
   :serial T
   :components ((:file "package")
                (:file "wod-dice")
-               (:file "arthurian-character-names"))
+               (:file "arthurian-character-names")
+               (:file "attributes-and-abilities.lisp"))
   :depends-on ("cl-ecs"))
