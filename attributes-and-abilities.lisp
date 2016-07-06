@@ -173,7 +173,23 @@
             (print-dots level))))
 
 
+(defun attribute-dots (attribute)
+  (find-symbol (format nil "~A/DOTS" attribute) 'merlin))
+
+
+(defun get-attribute-dots (entity attribute)
+  (apply (attribute-dots attribute) (list entity)))
+
+
 (defun print-entity-attribute (entity attribute)
   (print-attribute-level-description 
     attribute
-    (apply (car (cl-ecs::component-fields attribute)) (list entity))))
+    (get-attribute-dots entity attribute)))
+
+
+(defun attribute-dice-pool (entity attribute)
+  (dice-pool (get-attribute-dots entity attribute)))
+
+;; werkt niet
+;; (defun add-random-mundane-attribute (entity attribute)
+;;  (cl-ecs:add-component entity attribute ((attribute-dots attribute) (dice 3))))

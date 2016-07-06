@@ -16,5 +16,5 @@
   :components ((:file "package")
                (:file "wod-dice")
                (:file "arthurian-character-names")
-               (:file "attributes-and-abilities.lisp"))
+               (:file "attributes-and-abilities"))
   :depends-on ("cl-ecs"))
