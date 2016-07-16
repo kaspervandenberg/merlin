@@ -6,9 +6,12 @@
 
 
 (defmacro defattribute (name general-description &body level-descriptions)
-  `(progn  (cl-ecs:defcomponent ,name (dots))
-            (push '(,name . ,general-description) attribute-descriptions)
-            (push '(,name . ,level-descriptions) attribute-level-descriptions)))
+  `(progn  (unless (member (quote ,name) (cl-ecs::all-components))
+             (cl-ecs:defcomponent ,name (dots)))
+           (unless (assoc (quote ,name) attribute-descriptions)
+             (push '(,name . ,general-description) attribute-descriptions))
+           (unless (assoc (quote ,name) attribute-level-descriptions)
+             (push '(,name . ,level-descriptions) attribute-level-descriptions))))
 
 
 
@@ -16,43 +19,43 @@
               (strength is a |character's| muscle |power,| it determines how much 
                         he can lift and how much physical damage he does in 
                         melee combat.) 
-              (1 (Weak))
-               (2 (Average))
-               (3 (Strong))
-               (4 (Exceptional))
-               (5 (Outstanding)))
+              (1 (Weak)) 
+              (2 (Average))
+              (3 (Strong))
+              (4 (Exceptional))
+              (5 (Outstanding)))
 
 (defattribute dexterity 
               (skill and grace in physical movement.  skills like |dancing,| 
                      |riding,| |sleight of hand,| and archery require dexterity.  
                      in combat dexterity determines the chance to hit an 
-                     opponent and the chance to dodge incoming attacks.)
-                ((1 (Clumsy))
-                 (2 (Average))
-                 (3 (Dexterous))
-                 (4 (Graceful))
-                 (5 (Outstanding))))
+                     opponent and the chance to dodge incoming attacks.) 
+              (1 (Clumsy))
+              (2 (Average))
+              (3 (Dexterous))
+              (4 (Graceful))
+              (5 (Outstanding)))
 
-(defattribute heath 
+(defattribute heatlh 
               (health defines how many hits you can |take,| how long you can 
                       keep at a strenuous activity like running or |climbing,| 
                       and how often your character is sick.)
-               ((1 (Frail/sickly))
-                (2 (Average))
-                (3 (Healthy))
-                (4 (Vigorous))
-                (5 (Outstanding))))
+              (1 (Frail/sickly))
+              (2 (Average))
+              (3 (Healthy))
+              (4 (Vigorous))
+              (5 (Outstanding)))
 
 (defattribute charisma 
               (charisma is charm and force of personality.  characters with 
                         charisma are |likeable,| |persuasive,| |inspiring,| and 
                         they appear trustworthy.  it allows the character to win 
                         others for his views.)
-               ((1 (|Obnoxious/annoying|))
-                (2 (Inconspicuous))
-                (3 (Charming))
-                (4 (Charismatic))
-                (5 (Outstanding))))
+              (1 (|Obnoxious/annoying|))
+              (2 (Inconspicuous))
+              (3 (Charming))
+              (4 (Charismatic))
+              (5 (Outstanding)))
 
 (defattribute manipulation 
               (manipulation is flexibility in a social setting.  |it's| the 
@@ -62,11 +65,11 @@
                             do what a character wants because his words seem 
                             true or the only option not because they trust the 
                             character or see him as a leader.)
-               ((1 (awkward))
-                (2 (average))
-                (3 (persuasive))
-                (4 (exceptional))
-                (5 (outstanding))))
+              (1 (awkward))
+              (2 (average))
+              (3 (persuasive))
+              (4 (exceptional))
+              (5 (outstanding)))
 
 (defattribute resolve 
               (how determined is a character to continue arguing his case.  
@@ -77,11 +80,11 @@
                    intellectual setbacks/hits a character can take before 
                    giving up or losing his mind.  |(resolve| is on the social 
                    and mental scale as hitpoints is on the physical |scale.)|)
-               ((1 (hesitant))
-                (2 (average))
-                (3 (determined))
-                (4 (tenacious))
-                (5 (outstanding))))
+              (1 (hesitant))
+              (2 (average))
+              (3 (determined))
+              (4 (tenacious))
+              (5 (outstanding)))
 
 (defattribute intelligence
               (a |character's| ability to |reason,| to study and learn academic 
@@ -158,12 +161,16 @@
 
 
 (defun print-dots (n)
+  "Print a sequence of '⚫' that indicates a character's strength in
+   an attribute or skill.  Each dot allows for rolling a single dice."
   (loop for i from 1 to n
         do (princ "⚫"))
   (princ #\Space))
 
 
 (defun print-attribute-level-description (attribute level)
+  "Print the attribute level (in dots '⚫') and its quallitative 
+   description. `Level` ranges from 1 to 5."
   (format t "~a: ~a (~a)"
           (with-output-to-string (*standard-output*)
             (game-print (list attribute) t))
@@ -174,22 +181,51 @@
 
 
 (defun attribute-dots (attribute)
+  "Return the symbol that corresponds to the dots field of `attribute`."
   (find-symbol (format nil "~A/DOTS" attribute) 'merlin))
 
 
 (defun get-attribute-dots (entity attribute)
+  "Return the number of dots (i.e. level and available dice) `entity` 
+   has in the given attribute."
   (apply (attribute-dots attribute) (list entity)))
 
 
 (defun print-entity-attribute (entity attribute)
+  "Print a human readable description of the level of `attribute` that
+   `entity` has."
   (print-attribute-level-description 
     attribute
     (get-attribute-dots entity attribute)))
 
 
+(defun  print-entity-all-attributes (entity)
+  "Print a human readable description of the level of evry attribute
+   that `entity` has."
+  (mapcar #'(lambda (x)
+              (if (member x (cl-ecs::entity-components entity))
+                (progn 
+                  (print-entity-attribute entity x)
+                  (fresh-line))))
+          (mapcar #'car attribute-descriptions)))
+
+
 (defun attribute-dice-pool (entity attribute)
+  "Create a dice pool for `attribute` of `entity`."
   (dice-pool (get-attribute-dots entity attribute)))
 
-;; werkt niet
-;; (defun add-random-mundane-attribute (entity attribute)
-;;  (cl-ecs:add-component entity attribute ((attribute-dots attribute) (dice 3))))
+
+(defun add-random-mundane-attribute (entity attribute)
+  "Set `attribute` of `entity` to a random value appropriate for a
+   mundane character." 
+  (cl-ecs:add-component entity attribute nil)
+  (funcall (fdefinition `(setf ,(attribute-dots attribute))) (dice 3) entity))
+
+
+(defun add-all-random-mundane-attributes (entity)
+  "Set all attributes of `entity`, that were not previously set, to
+   random values appropriate for mundane characters."
+  (mapcar #'(lambda (x)
+              (unless (member x (cl-ecs::entity-components entity))
+                (add-random-mundane-attribute entity x)))
+          (mapcar #'car attribute-descriptions)))
