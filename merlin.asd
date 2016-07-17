@@ -11,7 +11,10 @@
   :version 0.0.0
   :maintainer "Kasper van den Berg <kasper@kaspervandenberg.net>"
   :author "Kasper van den Berg <kasper@kaspervandenberg.net>"
-  :description "Interactive story telling game about the Arthurian wizard Merlin Ambrosius."
+  :description "Text based single player RPG/interactive storytelling game in 
+                which the player plays the role of Merlin the wizard from the 
+                King Arthur legends."
+  :license "MIT license, see file LICENSE.md"
   :serial T
   :components ((:file "package")
                (:file "wod-dice")

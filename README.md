@@ -1,11 +1,12 @@
 # Merlin
-Text based single player RPG/interactive storytelling game in which the player plays the role of Merlin the wizard from the King Arthur legends
+Text based single player RPG/interactive storytelling game in which the player plays the role of Merlin the wizard from the King Arthur legends.
 
 ## Status
 Currently the game is under development (in its initial stages) and not ready for playing.
 
 ## License
-Copyright © Kasper van den Berg, 2016
+Copyright © 2016, Kasper van den Berg
+
 [MIT License](LICENSE.md)
 
 # Requirements
