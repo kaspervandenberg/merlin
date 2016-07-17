@@ -215,17 +215,30 @@
   (dice-pool (get-attribute-dots entity attribute)))
 
 
-(defun add-random-mundane-attribute (entity attribute)
+(defun add-random-attribute (entity attribute power-level)
   "Set `attribute` of `entity` to a random value appropriate for a
-   mundane character." 
+   character of the given `power-level`.  `power-level` can be `:mundane`,
+   for normal commoners, `:heroic` for powerfull knights and mages, 
+   and `:godlike` for entities way more powerfull than normal people 
+   and normal heroes." 
   (cl-ecs:add-component entity attribute nil)
-  (funcall (fdefinition `(setf ,(attribute-dots attribute))) (dice 3) entity))
+  (funcall (fdefinition `(setf ,(attribute-dots attribute)))
+           (dice (case power-level
+                   (:mundane 3)
+                   (:heroic 5)
+                   (:godlike 7)))
+           entity))
 
 
-(defun add-all-random-mundane-attributes (entity)
+(defun add-all-random-attributes (entity power-level)
   "Set all attributes of `entity`, that were not previously set, to
-   random values appropriate for mundane characters."
+   random values appropriate for of characters the given `power-level`.
+   `power-level` can be `:mundane`, for normal commoners, `:heroic` 
+   for powerfull knights and mages, and `:godlike` for entities way 
+   more powerfull than normal people and normal heroes.
+   "
   (mapcar #'(lambda (x)
               (unless (member x (cl-ecs::entity-components entity))
-                (add-random-mundane-attribute entity x)))
+                (add-random-attribute entity x power-level)))
           (mapcar #'car attribute-descriptions)))
+
