@@ -4,6 +4,10 @@ Text based single player RPG/interactive storytelling game in which the player p
 ## Status
 Currently the game is under development (in its initial stages) and not ready for playing.
 
+## License
+Copyright © Kasper van den Berg, 2016
+[MIT License](LICENSE.md)
+
 # Requirements
 * Common Lisp
   ([SBCL](http://www.sbcl.org/) with the intention to be portable to other CL implementations)
