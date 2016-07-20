@@ -17,6 +17,7 @@
   :license "MIT license, see file LICENSE.md"
   :serial T
   :components ((:file "package")
+               (:file "text-rendering")
                (:file "wod-dice")
                (:file "arthurian-character-names")
                (:file "attributes-and-abilities"))
