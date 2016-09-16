@@ -1,18 +1,120 @@
 
 (in-package :merlin)
 
-(defvar attribute-descriptions nil)
-(defvar attribute-level-descriptions nil)
+(defclass level-description nil 
+  ((level :initarg :level 
+          :documentation "The number of dice the skill adds to a check.  The 
+                          value ranges from 0 upto 5.")
+   (keyword :initarg :keyword 
+            :documentation "A short (one or two word) description of the level")
+   (description :initarg :description 
+                :documentation "(Optional) longer description of the level of 
+                                skill or ability to give an idea what one can 
+                                accomplish at this level and how common or rare 
+                                it is to find someone with this level"))
+  (:documentation "Describe a attribute of skill level."))
 
 
+(defclass attribute nil
+  ((name :initarg :name 
+         :documentation "Identifier for the attribute")
+   (ecs-compnent :initarg :ecs-component 
+                 :documentation "The component to assign to `entities` that have 
+                                 this attribute.")
+   (description :initarg :description
+                :documentation "Text describing what can be done with this 
+                                attribute.")
+   (levels :initarg :levels
+           :documentation "Description for the levels of competence (i.e. the 
+                           number of dots an entity has)."))
+  (:documentation "A broad pysical characteristic a character has and that can 
+                   be used"))
+
+
+(defclass skill nil
+  ((name :initarg :name
+         :documentation "Identifier for the skill")
+   (ecs-compnent :initarg :ecs-component
+                 :documentation "The component to assign to `entities` that have
+                                 this skill.")
+   (attribute :initarg :attribute :type attribute
+              :documentation "When making a check, which attribute should be 
+                              combined with the skill to determine the dice 
+                              pool?")
+   (description :initarg :description
+                :documentation "Text describing what can be done with this 
+                                skill")
+   (levels :initarg :levels
+           :documentation "Description for the levels of competence (i.e. the 
+                           number of dots an entity has)."))
+  (:documentation "A specific skill attained throught study and/or practise."))
+
+
+
+(if nil
+  (progn 
+    (defvar attribute-descriptions
+      nil
+      "alist of (attribute-name . description)-conses.  Description is a list of 
+       symbols that translate to a human understandable description (in English) of
+       the attribute.  Use `print-attribute-description` to display the attribute's
+       description.") 
+    (defvar attribute-level-descriptions 
+      nil 
+      "Nested structure of alist of (attribute-name . alist)-conses.  The inner
+       alist is an alist of (level keyword)-lists.  The level indicates how
+       many dice the character may roll `keyword` is a one or two word
+       (English) description of the attribute level.  Optionally, the list can
+       contain a more verbose description after the keyword part (not yet used).") 
+    (defvar skill-attributes
+      nil
+            "When making a check, which attribute should be combined with the skill to
+             determine the dice pool?  This alist contains (skill .attribute) conses 
+             that indicate which attribute to use for a skill check.")
+
+             (defvar skill-stations nil
+               "Different persons have access to different skills based on to which medieval
+                station, i.e. rank in society, they belong.  `skill-stations` is an alist of
+                (skill-name . stations)-conses
+                where `stations` is a list of social stations ")
+
+                (defvar skill-descriptions nil
+                  "alist of (skill-name . description)-conses.  Like `attribute-descriptions`
+                   `description is a list of symbols giving a human understandable description
+                   (in English) of the skill.")
+
+                   (defvar skill-level-descriptions nil
+                     "Nested structure of alist of (skill-name . alist)-conses; similar to 
+                      `attribute-level-descriptions`.  The nested alist contains lists with the
+                      structure (level keyword).  Level indicates how many dice a character has
+                      in his dice pool for the given skill check.  `keyword is a list with a one 
+                      or two word description (in English) for the skill level.  Optionally, the 
+                      list can contain a more verbose description of the level of the skill.")))
+
+
+
+ 
+(if nil
+  (defmacro defattribute (name general-description &body level-descriptions)
+    `(progn  (unless (member (quote ,name) (cl-ecs::all-components))
+               (cl-ecs:defcomponent ,name (dots)))
+             (pushnew '(,name . ,general-description)     attribute-descriptions          :key #'car)
+             (pushnew '(,name . ,level-descriptions)      attribute-level-descriptions    :key #'car))))
 (defmacro defattribute (name general-description &body level-descriptions)
-  `(progn  (unless (member (quote ,name) (cl-ecs::all-components))
-             (cl-ecs:defcomponent ,name (dots)))
-           (unless (assoc (quote ,name) attribute-descriptions)
-             (push '(,name . ,general-description) attribute-descriptions))
-           (unless (assoc (quote ,name) attribute-level-descriptions)
-             (push '(,name . ,level-descriptions) attribute-level-descriptions))))
+  (let ((symbName (gensym)) (symbGenDescr (gensym)) (lvl-descrs (gensym)))
+    `(let ((symbName (quote ,name))))
+    )
+  )
 
+
+
+(defmacro defskill (name attribute station-list general-description &body level-descriptions)
+  `(progn (unless (member (quote ,name) (cl-ecs::all-components))
+            (cl-ecs:defcomponent ,name (dots)))
+          (pushnew '(,name . ,attribute)                skill-attributes                :key #'car)
+          (pushnew '(,name . ,general-description)      skill-descriptions              :key #'car) 
+          (pushnew '(,name . ,level-descriptions)       skill-level-descriptions        :key #'car)
+          (pushnew '(,name . ,station-list)             skill-stations                   :key #'car)))
 
 
 (defattribute strength 
@@ -127,6 +229,82 @@
               (3 (potent))
               (4 (exceptional))
               (5 (outstanding)))
+
+(setf attribute-descriptions (nreverse attribute-descriptions))
+(setf attribute-level-descriptions (nreverse attribute-level-descriptions))
+
+; Skills from Loseth's Dungeoneer game (or game concept, work in progress); a 
+; rich and realistically set of medieval skills.
+; See https://forum.rpg.net/showthread.php?510194-Dungeoneer-Rpg,
+; http://s328.photobucket.com/user/loseth/media/ClassCards1.jpg.html?sort=3&o=11
+; Is it suitable for Merlin?  It lacks magic skills that the player character
+; and mage NPCs require, but that can be augmented.  It features lots of skills
+; for the mundane people.  What is the effect of having a rich skill system
+; compared to a few broader skills?
+(defskill |Folkloric Customs & Manners|
+  charisma 
+  (underclass-village
+    lowerclass-f-village lowerclass-m-village
+    lower-middle-class-f-village lower-middle-class-m-village
+    middle-class-f-village middle-class-m-village)
+  (knowing how to behave when among the common people passing as a fellow 
+           commoner.  knowing when which folk feast is celebrated at what time 
+           and what it means.)
+  (0 (none) (you lack any knowledge about |Folkloric Customs & Manners|))
+  (1 (poor) (you have litte knowledge about |Folkloric Customs & Manners|.
+                 people notice you are not from their regions or not from their
+                 station.  You easily offend people by acting not according to 
+                 their manners.))
+  (2 (average) (you know what most people know about |Folkloric Customs & Manners|.
+                    you easily fit in and can pass for one of the guys))
+  (3 (good) (you know the |Folkloric Customs & Manners| better than most 
+                 including commoners themselfs.  Gaining drinking buddies in the
+                 local alehouse comes easy to you.  Locals ask your advise about
+                 |Folkloric Customs & Manners|))
+  (4 (exceptional) (you are an authority on the subject of |Folkloric Customs & Manners|.
+                        People from a large region come to you for advise.
+                        You know obscure details about folk feasts.  You can
+                        settle disputes in accordance to the common peoples own
+                        customs.))
+  (5 (outstanding) (there are only a handful of people in your league when it
+                          comes to |Folkloric Customs & Manners|.)))
+
+(defskill harvesting
+          strength
+          (underclass-village 
+            lowerclass-f-village lowerclass-m-village
+            lower-middle-class-f-village lower-middle-class-m-village
+            middle-class-f-village middle-class-m-village)
+          (you can bring in the harvest when the time ripe.)
+          (0 (none) (you lack any skills in harvesting.))
+          (1 (poor) (you can harvest but it takes you more time than the average
+                         villager.  you may destroy some produce in your attempt
+                         to harvest.))
+          (2 (average) (you are as good at harvesting as most villagers.  when 
+                            seeing |crops,| you can tell whether they are ready 
+                            to be harvested.))
+          (3 (good) (you are better at harvesting than most people.  You are 
+                         faster than most.  You can predict the best moment to
+                         harvest the |crops,| taking into accout the weather and
+                         the |crops'| growth.  You can predict the |harvest's|
+                         yield.))
+          (4 (exceptional) (when you |harvest,| the yield is more than a good 
+                             harvester would have expected it to be.  You can
+                             predict the best moment for harvesting and the 
+                             yield without having to see the crops using only 
+                             an average |harvester's| description of the fields
+                             an the weather the fields experienced.  People from
+                             a large region would love to have your help with 
+                             their harvest.))
+          (5 (outstanding) (there are only a few people in your league when it
+                                  comes to harvesting.  Your speed borders on
+                                  the supernatural.  Even crops that others 
+                                  would consider ruined, give a reasonnable 
+                                  field in your hands.  You are the subject of
+                                  farmer stories in a large region.))
+          
+          )
+
                 
 
 (defun print-attribute-description (attribute)
