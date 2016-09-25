@@ -79,6 +79,10 @@
     (f)))
 
 
+(defmacro with-existing-entity2 (entity &body body)
+  `(with-existing-entity ,entity (lambda (entity) ,@body)))
+
+
 (defmethod initialize-instance :after ((instance Component) &rest initargs)
   (declare ( ignore initargs))
   (push instance *components*))
@@ -91,9 +95,8 @@
 
 
 (defmethod (setf component-entity) (entity (component Component))
-  (with-existing-entity entity
-    (lambda (entity)
-      (setf (slot-value component 'entity) entity))))
+  (with-existing-entity2 entity
+    (setf (slot-value component 'entity) entity)))
 
 
 (defun get-components-of-type (component-type)
@@ -106,9 +109,8 @@
   "Create a fresh-instance of `component-class` and add it to the components of 
    `entity`.
    `component-initargs` are supplied to `(make-instance component-class …)`."
-  (with-existing-entity entity
-    (lambda (entity)
-      (apply #'make-instance component-class :entity entity component-initargs))))
+  (with-existing-entity2 entity
+    (apply #'make-instance component-class :entity entity component-initargs)))
 
 
 (defun select-entities-having (component-type)
@@ -123,8 +125,7 @@
   "Return all `Components` of `entity`.
    If `component-type` is specified, only the `Components` of `component-type`
    are returned otherwise all `Components` are returned."
-  (with-existing-entity entity
-    (lambda (entity)
-      (remove-if-not (lambda (x) (eql x entity)) 
+  (with-existing-entity2 entity
+    (remove-if-not (lambda (x) (eql x entity)) 
                      (get-components-of-type component-type) 
-                     :key #'entity))))
+                     :key #'entity)))
