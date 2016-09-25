@@ -18,6 +18,7 @@
   :serial T
   :components ((:file "package")
                (:file "text-rendering")
+               (:file "entity-component-system")
                (:file "wod-dice")
                (:file "arthurian-character-names")
                (:file "attributes-and-abilities"))

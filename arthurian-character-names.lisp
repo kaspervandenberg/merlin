@@ -84,15 +84,22 @@
   (elt choices (random (length choices))))
 
 
-(cl-ecs:defcomponent character-identity (gender name))
+(defclass Character-Identity (Component)
+  ((gender :initarg :gender
+           :reader gender)
+   (name :initarg :name 
+         :reader name)))
 
 
 (defun add-random-character-identity (entity)
   "Add `character-identity` component to an entity."
-  (unless (member 'character-identity (cl-ecs::entity-components entity))
-    (let* ((g (random-elt *genders*))
-           (n (random-elt (assoc g *names*))))
-      (cl-ecs:add-component entity 'character-identity `(:character-identity/gender ,g :character-identity/name ,n)))))
+  (with-existing-entity 
+    entity
+    (lambda (entity) 
+      (unless (all-components-of entity 'Character-Identity) 
+        (let* ((g (random-elt *genders*)) 
+               (n (random-elt (assoc g *names*)))) 
+          (entity-add-fresh-component entity 'Character-Identity :gender g :name n))))))
 
 
 
