@@ -1,7 +1,7 @@
 
 (in-package :merlin)
 
-(defclass level-description nil 
+(defclass Level-Description nil 
   ((level :initarg :level 
           :documentation "The number of dice the skill adds to a check.  The 
                           value ranges from 0 upto 5.")
@@ -15,106 +15,49 @@
   (:documentation "Describe a attribute of skill level."))
 
 
-(defclass attribute nil
-  ((name :initarg :name 
-         :documentation "Identifier for the attribute")
-   (ecs-compnent :initarg :ecs-component 
-                 :documentation "The component to assign to `entities` that have 
-                                 this attribute.")
-   (description :initarg :description
+(defclass Attribute (Component)
+  ((description :reader attribute-description
                 :documentation "Text describing what can be done with this 
-                                attribute.")
-   (levels :initarg :levels
-           :documentation "Description for the levels of competence (i.e. the 
-                           number of dots an entity has)."))
-  (:documentation "A broad pysical characteristic a character has and that can 
-                   be used"))
+                                Attribute")
+   (levels :reader attribute-levels
+           :documentation "Description for the levels of competence/innate 
+                           prowess.")
+   (dots :initarg :dots
+         :reader attribute-dots
+         :documentation "The number of dice the entity may throw when making a
+                         ability or skill check with this ability or skill.  It
+                         gives the level of competence."))
+  (:documentation "Base base for Ability and Skill components."))
 
 
-(defclass skill nil
-  ((name :initarg :name
-         :documentation "Identifier for the skill")
-   (ecs-compnent :initarg :ecs-component
-                 :documentation "The component to assign to `entities` that have
-                                 this skill.")
-   (attribute :initarg :attribute :type attribute
-              :documentation "When making a check, which attribute should be 
-                              combined with the skill to determine the dice 
-                              pool?")
-   (description :initarg :description
-                :documentation "Text describing what can be done with this 
-                                skill")
-   (levels :initarg :levels
-           :documentation "Description for the levels of competence (i.e. the 
-                           number of dots an entity has)."))
-  (:documentation "A specific skill attained throught study and/or practise."))
+(defclass Ability (Attribute)
+  ()
+  (:documentation "An innate physical, mental, or social characteristic of an 
+                   entity."))
 
 
-
-(if nil
-  (progn 
-    (defvar attribute-descriptions
-      nil
-      "alist of (attribute-name . description)-conses.  Description is a list of 
-       symbols that translate to a human understandable description (in English) of
-       the attribute.  Use `print-attribute-description` to display the attribute's
-       description.") 
-    (defvar attribute-level-descriptions 
-      nil 
-      "Nested structure of alist of (attribute-name . alist)-conses.  The inner
-       alist is an alist of (level keyword)-lists.  The level indicates how
-       many dice the character may roll `keyword` is a one or two word
-       (English) description of the attribute level.  Optionally, the list can
-       contain a more verbose description after the keyword part (not yet used).") 
-    (defvar skill-attributes
-      nil
-            "When making a check, which attribute should be combined with the skill to
-             determine the dice pool?  This alist contains (skill .attribute) conses 
-             that indicate which attribute to use for a skill check.")
-
-             (defvar skill-stations nil
-               "Different persons have access to different skills based on to which medieval
-                station, i.e. rank in society, they belong.  `skill-stations` is an alist of
-                (skill-name . stations)-conses
-                where `stations` is a list of social stations ")
-
-                (defvar skill-descriptions nil
-                  "alist of (skill-name . description)-conses.  Like `attribute-descriptions`
-                   `description is a list of symbols giving a human understandable description
-                   (in English) of the skill.")
-
-                   (defvar skill-level-descriptions nil
-                     "Nested structure of alist of (skill-name . alist)-conses; similar to 
-                      `attribute-level-descriptions`.  The nested alist contains lists with the
-                      structure (level keyword).  Level indicates how many dice a character has
-                      in his dice pool for the given skill check.  `keyword is a list with a one 
-                      or two word description (in English) for the skill level.  Optionally, the 
-                      list can contain a more verbose description of the level of the skill.")))
+(defclass Skill (Attribute)
+  ((base-ability :initarg :base-ability
+                 :reader base-ability
+                 :type Ability
+                 :documentation "The ability that is used in combination with 
+                                 this skill for skill checks.")
+   (station :initarg :station
+            :reader attribute-station
+            :documentation "The class/station in medieval society the skill is 
+                            most often possessed by people of this station.")))
 
 
-
- 
-(if nil
-  (defmacro defattribute (name general-description &body level-descriptions)
-    `(progn  (unless (member (quote ,name) (cl-ecs::all-components))
-               (cl-ecs:defcomponent ,name (dots)))
-             (pushnew '(,name . ,general-description)     attribute-descriptions          :key #'car)
-             (pushnew '(,name . ,level-descriptions)      attribute-level-descriptions    :key #'car))))
-(defmacro defattribute (name general-description &body level-descriptions)
-  (let ((symbName (gensym)) (symbGenDescr (gensym)) (lvl-descrs (gensym)))
-    `(let ((symbName (quote ,name))))
-    )
-  )
-
-
-
-(defmacro defskill (name attribute station-list general-description &body level-descriptions)
-  `(progn (unless (member (quote ,name) (cl-ecs::all-components))
-            (cl-ecs:defcomponent ,name (dots)))
-          (pushnew '(,name . ,attribute)                skill-attributes                :key #'car)
-          (pushnew '(,name . ,general-description)      skill-descriptions              :key #'car) 
-          (pushnew '(,name . ,level-descriptions)       skill-level-descriptions        :key #'car)
-          (pushnew '(,name . ,station-list)             skill-stations                   :key #'car)))
+(defmacro defability (name description &body levels)
+  `(flet ((deflevel (l)
+           (destructuring-bind (lvl kw &optional descr) l
+             (make-instance 'Level-Description :level lvl :keyword kw :description descr))))
+    (let ((lvls (mapcar #'deflevel (quote ,levels))))
+      (defclass ,name (Attribute)
+        ((description :allocation :class
+                      :initform (quote ,description))
+         (levels :allocation :class
+                 :initform lvls))))))
 
 
 (defattribute strength 
