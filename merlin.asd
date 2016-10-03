@@ -21,4 +21,4 @@
                (:file "entity-component-system")
                (:file "wod-dice")
                (:file "arthurian-character-names")
-               (:file "attributes-and-abilities")))
+               (:file "skills-and-abilities")))
