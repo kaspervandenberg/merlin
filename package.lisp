@@ -1,7 +1,7 @@
 (defpackage #:merlin
   (:documentation
     "Package for the interactive story telling game about the Arthurian Merlin Ambrosius.")
-  (:use :cl :cl-ecs)
+  (:use :cl)
   (:export
     *entities*
     *components*
@@ -12,4 +12,3 @@
     select-entities-having
     all-components-of))
 
-(cl-ecs:init-ecs)

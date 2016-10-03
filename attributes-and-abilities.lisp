@@ -37,18 +37,17 @@
 
 
 (defclass Skill (Attribute)
-  ((base-ability :initarg :base-ability
-                 :reader base-ability
+  ((base-ability :reader base-ability
                  :type Ability
                  :documentation "The ability that is used in combination with 
                                  this skill for skill checks.")
-   (station :initarg :station
-            :reader attribute-station
+   (station :reader attribute-station
             :documentation "The class/station in medieval society the skill is 
                             most often possessed by people of this station.")))
 
 
 (defmacro defability (name description &body levels)
+  "Define a component that represents an ability."
   `(flet ((deflevel (l)
            (destructuring-bind (lvl kw &optional descr) l
              (make-instance 'Level-Description :level lvl :keyword kw :description descr))))
@@ -60,17 +59,40 @@
                  :initform lvls))))))
 
 
-(defattribute strength 
-              (strength is a |character's| muscle |power,| it determines how much 
-                        he can lift and how much physical damage he does in 
-                        melee combat.) 
-              (1 (Weak)) 
-              (2 (Average))
-              (3 (Strong))
-              (4 (Exceptional))
-              (5 (Outstanding)))
+(defmacro defskill (name ability-type station description &body levels)
+  "Define a component that represents a skill."
+  `(flet ((deflevel (l)
+            (destructuring-bind (lvl kw &optional descr) l
+              (make-instance 'Level-Description :level lvl :keyword kw :description descr))))
+     (let ((lvls (mapcar #'deflevel (quote ,levels))))
+       (defclass ,name (Skill)
+         ((base-ability :initarg :base-ability
+                        :type ,ability-type)
+          (station :allocation :class
+                   :initform (quote ,station))
+          (description :allocation :class
+                       :initform (quote ,description))
+          (levels :allocation :class
+                  :initform lvls))))))
 
-(defattribute dexterity 
+
+(defability strength
+            (strength is a |character's| muscle |power,| it determines how much 
+                      he can lift and how much physical damage he does in melee 
+                      combat.)
+            (1 (Weak) (You can barely lift a kettle.  Handling heavier weapons
+                           is difficult for you.))
+            (2 (Average))
+            (3 (Strong) (When there is some heavy lifting to |do,| your neighbours
+                              appreciate your help.  Perhaps you work as 
+                              blacksmith.  You can do much damage with heavy 
+                              weapons.))
+            (4 (Exceptional) (You are known for your strength throughout your 
+                                  region.  Some think you are as strong as a
+                                  team of horses))
+            (5 (Outstanding) (Your strength is legendary.)))
+
+(defability dexterity 
               (skill and grace in physical movement.  skills like |dancing,| 
                      |riding,| |sleight of hand,| and archery require dexterity.  
                      in combat dexterity determines the chance to hit an 
@@ -81,7 +103,7 @@
               (4 (Graceful))
               (5 (Outstanding)))
 
-(defattribute heatlh 
+(defability heatlh 
               (health defines how many hits you can |take,| how long you can 
                       keep at a strenuous activity like running or |climbing,| 
                       and how often your character is sick.)
@@ -91,7 +113,7 @@
               (4 (Vigorous))
               (5 (Outstanding)))
 
-(defattribute charisma 
+(defability charisma 
               (charisma is charm and force of personality.  characters with 
                         charisma are |likeable,| |persuasive,| |inspiring,| and 
                         they appear trustworthy.  it allows the character to win 
@@ -102,7 +124,7 @@
               (4 (Charismatic))
               (5 (Outstanding)))
 
-(defattribute manipulation 
+(defability manipulation 
               (manipulation is flexibility in a social setting.  |it's| the 
                             quality of expressing oneself in such a way that 
                             others agree and comply.  compared to charisma 
@@ -116,7 +138,7 @@
               (4 (exceptional))
               (5 (outstanding)))
 
-(defattribute resolve 
+(defability resolve 
               (how determined is a character to continue arguing his case.  
                    how |deterimined/focussed| is a character to continue to 
                    persue an intellectually challen investigation resolve 
@@ -131,7 +153,7 @@
               (4 (tenacious))
               (5 (outstanding)))
 
-(defattribute intelligence
+(defability intelligence
               (a |character's| ability to |reason,| to study and learn academic 
                  |subjects,| to concentrate on an |(intellectual)| task at hand.  
                  the |character's| level of general knowledge and the ability 
@@ -146,7 +168,7 @@
               (4 (genius)) 
               (5 (outstanding))) 
 
-(defattribute wisdom 
+(defability wisdom 
               (the ability to perceive |one's| surroundings.  the ability for 
                    quick thinking and flexibly use |one's| intelligence.)
               (1 (dull-witted))
@@ -155,7 +177,7 @@
               (4 (sagious)) 
               (5 (outstanding)))
 
-(defattribute magic
+(defability magic
               (the power of a |mage's| spells.)
               (1 (poor))
               (2 (average))
@@ -163,7 +185,7 @@
               (4 (exceptional))
               (5 (outstanding)))
 
-(defattribute mana 
+(defability mana 
               (the magical reserves a mage has.  some spells require spending 
                    some mana.  Mana is on the mental scale as health is on the 
                    physical scale.)
@@ -173,8 +195,6 @@
               (4 (exceptional))
               (5 (outstanding)))
 
-(setf attribute-descriptions (nreverse attribute-descriptions))
-(setf attribute-level-descriptions (nreverse attribute-level-descriptions))
 
 ; Skills from Loseth's Dungeoneer game (or game concept, work in progress); a 
 ; rich and realistically set of medieval skills.
