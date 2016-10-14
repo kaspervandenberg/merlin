@@ -43,7 +43,7 @@
      a value ∉ `*entities*`."))
 
 
-(defun add-entity (&key (name (gensym)))
+(defun add-entity (&optional (name (gensym)))
   "Add a fresh Entity to `*entities*`.
    `name` is an optional parameter it sets the symbol to use for the entity;
    if ommitted `(gensym)` is used to generate a fresh symbol for the entity.

@@ -10,5 +10,19 @@
     component-entity
     entity-add-fresh-component
     select-entities-having
-    all-components-of))
+    all-components-of
+    attribute-dice-pool
+    strength
+    dexterity
+    health
+    charisma
+    manipulation
+    resolve
+    intelligence
+    wisdom
+    magic
+    mana
+    |Folkloric Customs & Manners|
+    harvesting
+    ))
 
