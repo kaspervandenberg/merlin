@@ -305,21 +305,19 @@
                 (attribute-dots skl))))
 
 
-;;(defun add-random-attribute (entity attribute power-level)
-;;  "Set `attribute` of `entity` to a random value appropriate for a
-;;   character of the given `power-level`.  `power-level` can be `:mundane`,
-;;   for normal commoners, `:heroic` for powerfull knights and mages, 
-;;   and `:godlike` for entities way more powerfull than normal people 
-;;   and normal heroes." 
-;;  (cl-ecs:add-component entity attribute nil)
-;;  (funcall (fdefinition `(setf ,(attribute-dots attribute)))
-;;           (dice (case power-level
-;;                   (:mundane 3)
-;;                   (:heroic 5)
-;;                   (:godlike 7)))
-;;           entity))
-;;
-;;
+(defun entity-add-random-attribute (entity attribute-class power-level &rest initargs)
+  "Create a fresh instance of `attribute-type` setting its `dots` to a random
+   value appropriate for a character of the given `power-level`.  `power-level`
+   can be: `:mundane` for normal commoners, `:heroic` for powerful knights and
+   mages, and `:godlike` for entities way more powerful than normal people and 
+   regular heroes."
+  (let ((d (dice (case power-level
+                   (:mundane 3)
+                   (:heroic 5)
+                   (:godlike 7)))))
+    (apply #'entity-add-fresh-component (append (list entity attribute-class :dots d) initargs))))
+
+
 ;;(defun add-all-random-attributes (entity power-level)
 ;;  "Set all attributes of `entity`, that were not previously set, to
 ;;   random values appropriate for of characters the given `power-level`.

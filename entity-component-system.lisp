@@ -110,7 +110,7 @@
    `entity`.
    `component-initargs` are supplied to `(make-instance component-class …)`."
   (with-existing-entity2 entity
-    (apply #'make-instance component-class :entity entity component-initargs)))
+    (apply #'make-instance (append (list component-class :entity entity) component-initargs))))
 
 
 (defun select-entities-having (component-type)
