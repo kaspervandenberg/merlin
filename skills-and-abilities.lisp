@@ -103,7 +103,7 @@
             (4 (Graceful))
             (5 (Outstanding)))
 
-(defability heatlh 
+(defability health 
             (health defines how many hits you can |take,| how long you can 
                     keep at a strenuous activity like running or |climbing,| 
                     and how often your character is sick.)
@@ -318,15 +318,14 @@
     (apply #'entity-add-fresh-component (append (list entity attribute-class :dots d) initargs))))
 
 
-;;(defun add-all-random-attributes (entity power-level)
-;;  "Set all attributes of `entity`, that were not previously set, to
-;;   random values appropriate for of characters the given `power-level`.
-;;   `power-level` can be `:mundane`, for normal commoners, `:heroic` 
-;;   for powerfull knights and mages, and `:godlike` for entities way 
-;;   more powerfull than normal people and normal heroes.
-;;   "
-;;  (mapcar #'(lambda (x)
-;;              (unless (member x (cl-ecs::entity-components entity))
-;;                (add-random-attribute entity x power-level)))
-;;          (mapcar #'car attribute-descriptions)))
+(defun entity-add-all-random-abilities (entity power-level)
+  "Set all abilities of `entity` –for which the entity does not have yet have
+   a component– to a random value of dots appropriate for the given 
+   `power-level`.  `power-level` can be: `:mundane` for normal commoners, 
+   `:heroic` for powerful knights and mages, and `:godlike` for entities way 
+   more powerful than normal people and regular heroes."
+  (let* ((all-abilities '(strength dexterity health charisma manipulation resolve
+                                  intelligence wisdom magic mana))
+         (fresh-abilities (remove-if (lambda (x) (all-components-of entity x)) all-abilities)))
+    (mapc (lambda (x) (entity-add-random-attribute entity x power-level)) fresh-abilities)))
 
