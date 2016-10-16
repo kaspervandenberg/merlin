@@ -91,7 +91,7 @@
          :reader name)))
 
 
-(defun add-random-character-identity (entity)
+(defun entity-add-random-character-identity (entity)
   "Add `character-identity` component to an entity."
   (with-existing-entity 
     entity

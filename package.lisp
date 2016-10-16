@@ -9,11 +9,14 @@
     add-entity
     component-entity
     entity-add-fresh-component
+    entity-add-random-character-identity
     entity-add-random-attribute
     entity-add-all-random-abilities
     select-entities-having
     all-components-of
     attribute-dice-pool
+    name
+    gender
     strength
     dexterity
     health
@@ -25,6 +28,5 @@
     magic
     mana
     |Folkloric Customs & Manners|
-    harvesting
-    ))
+    harvesting))
 
