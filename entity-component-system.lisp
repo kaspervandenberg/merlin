@@ -129,3 +129,41 @@
     (remove-if-not (lambda (x) (eql x entity)) 
                      (get-components-of-type component-type) 
                      :key #'entity)))
+
+
+(defun build-component-list (entity component-types)
+  "Build an argument list by selecting the components of the given `component-types`
+   among `(all-components-of entity)`.
+   If a component-type appears multiple times in `component-types` each time a fresh
+   component from `(all-components-of entity)` is selected.  If multiple componets
+   of `(all-components-of entity)` match the component-type, the first non-used is
+   passed to the resulting argument list."
+  (let ((*components* (all-components-of entity)))
+    (flet ((arg-reducer (prev cur)
+             (destructuring-bind (args all-boundp) prev
+               (let ((arg (set-difference (get-components-of-type cur) args)))
+                 (list (cons (car arg) args) (and all-boundp arg))))))
+      (destructuring-bind (args all-boundp)
+        (reduce #'arg-reducer component-types :initial-value '(nil t))
+        (values (reverse args) all-boundp)))))
+
+
+(defun apply-components (func entity component-types &optional call-with-incomplete-list)
+  (multiple-value-bind (args all-boundp) (build-component-list entity component-types)
+    (if (or all-boundp call-with-incomplete-list)
+      (apply func args))))
+
+
+(defmacro defsystem (name components &body body)
+  "Define a system that receives the specified components.  The system is a 
+   function that accepts a single argument the entity, binds the components as 
+   specified in `components`, and then executes `body`.  `components` is an 
+   alist of symbol component class pairs."
+  (let* ((meta-components components)
+        (meta-arg-decl (mapcar #'car meta-components))
+        (meta-component-types (mapcar #'cadr meta-components)))
+    `(defun ,name (entity)
+       (apply-components
+         (lambda ,meta-arg-decl ,@body)
+         entity
+         (list ,@meta-component-types)))))

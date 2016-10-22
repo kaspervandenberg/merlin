@@ -5,6 +5,7 @@
   (:export
     *entities*
     *components*
+    defsystem
     Component
     add-entity
     component-entity
@@ -15,6 +16,7 @@
     select-entities-having
     all-components-of
     attribute-dice-pool
+    character-identity
     name
     gender
     strength
