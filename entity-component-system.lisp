@@ -139,13 +139,12 @@
    of `(all-components-of entity)` match the component-type, the first non-used is
    passed to the resulting argument list."
   (let ((*components* (all-components-of entity)))
-    (flet ((arg-reducer (prev cur)
-             (destructuring-bind (args all-boundp) prev
-               (let ((arg (set-difference (get-components-of-type cur) args)))
-                 (list (cons (car arg) args) (and all-boundp arg))))))
-      (destructuring-bind (args all-boundp)
-        (reduce #'arg-reducer component-types :initial-value '(nil t))
-        (values (reverse args) all-boundp)))))
+    (labels ((builder (types inverse-args all-boundp)
+               (if types 
+                 (let ((arg (set-difference (get-components-of-type (car types) inverse-args))))
+                   (builder (cdr types) (cons (car arg) inverse-args) (and arg all-boundp)))
+                 (values (reverse inverse-args) all-boundp))))
+      (builder component-types nil t))))
 
 
 (defun apply-components (func entity component-types &optional call-with-incomplete-list)
