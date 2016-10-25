@@ -6,6 +6,7 @@
     *entities*
     *components*
     defsystem
+    defbehavior
     Component
     add-entity
     component-entity

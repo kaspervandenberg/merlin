@@ -19,6 +19,7 @@
   :components ((:file "package")
                (:file "text-rendering")
                (:file "entity-component-system")
+               (:file "behaviour-tree")
                (:file "wod-dice")
                (:file "arthurian-character-names")
                (:file "skills-and-abilities")))
