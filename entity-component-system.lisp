@@ -141,7 +141,7 @@
   (let ((*components* (all-components-of entity)))
     (labels ((builder (types inverse-args all-boundp)
                (if types 
-                 (let ((arg (set-difference (get-components-of-type (car types) inverse-args))))
+                 (let ((arg (set-difference (get-components-of-type (car types)) inverse-args)))
                    (builder (cdr types) (cons (car arg) inverse-args) (and arg all-boundp)))
                  (values (reverse inverse-args) all-boundp))))
       (builder component-types nil t))))
