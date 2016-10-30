@@ -6,7 +6,7 @@
     *entities*
     *components*
     defsystem
-    defbehavior
+    defbehaviour-task
     Component
     add-entity
     component-entity
@@ -16,6 +16,9 @@
     entity-add-all-random-abilities
     select-entities-having
     all-components-of
+    end-turn
+    make-behaviour-sequence
+    make-behaviour-selector
     attribute-dice-pool
     character-identity
     name
