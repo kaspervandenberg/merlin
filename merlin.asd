@@ -16,10 +16,12 @@
                 King Arthur legends."
   :license "MIT license, see file LICENSE.md"
   :serial T
+  :depends-on ("usocket")
   :components ((:file "package")
                (:file "text-rendering")
                (:file "entity-component-system")
                (:file "behaviour-tree")
                (:file "wod-dice")
                (:file "arthurian-character-names")
-               (:file "skills-and-abilities")))
+               (:file "skills-and-abilities")
+               (:file "server")))
