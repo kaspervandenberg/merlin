@@ -24,4 +24,6 @@
                (:file "wod-dice")
                (:file "arthurian-character-names")
                (:file "skills-and-abilities")
+               (:file "moves.lisp")
+               (:file "player-moves")
                (:file "server")))

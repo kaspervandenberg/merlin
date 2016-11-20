@@ -1,3 +1,6 @@
+;;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; Base: 10 -*-
+;;;; vim: set filetype=lisp:
+
 (in-package :merlin)
 
 ; Behaviour tree allows to define the AI for an NPC in a tree structure.
@@ -63,9 +66,3 @@
     t))
 
 
-(defbehaviour-task eval-player-input
-  "Allow the player to input any s-expr and evaluate it."
-  (format t "~%what do you do? (#eval) > ")
-  (force-output)
-  (let ((pl-input (read)))
-    (eval pl-input)))
