@@ -18,8 +18,12 @@
   :serial T
   :depends-on ("usocket")
   :components ((:file "package")
+               (:module "entity-component-system"
+                :components
+                ((:file "package")
+                 (:file "entity" :depends-on ("package"))))
                (:file "text-rendering")
-               (:file "entity-component-system")
+;               (:file "entity-component-system")
                (:file "behaviour-tree")
                (:file "wod-dice")
                (:file "arthurian-character-names")

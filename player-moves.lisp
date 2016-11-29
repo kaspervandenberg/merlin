@@ -33,7 +33,7 @@
 
 (defun gen-entity-attribute-dice-pool (attribute)
   (lambda (entity)
-    (apply-components #'attribute-dice-pool entity (list attribute))))
+    (ecs:apply-components #'attribute-dice-pool entity (list attribute))))
 
 
 (defun gen-hack-and-slash (target counter-attack)

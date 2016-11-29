@@ -3,7 +3,7 @@
 
 (in-package :merlin)
 
-(defclass Move-in-Progress (Component)
+(defclass Move-in-Progress (ecs:Component)
   ((resolution-dice-roll
      :initform nil
      :documentation "One of the `*n-successes-interpretation*` values that 

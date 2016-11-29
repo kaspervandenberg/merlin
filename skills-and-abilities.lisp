@@ -16,7 +16,7 @@
   (:documentation "Describe a attribute of skill level."))
 
 
-(defclass Attribute (Component)
+(defclass Attribute (ecs:Component)
   ((description :reader attribute-description
                 :documentation "Text describing what can be done with this 
                                 Attribute")
@@ -288,7 +288,7 @@
   (:documentation "Return the `ability` component of the `skills`'s `entity`."))
 
 (defmethod get-skill-ability ((s Skill))
-  (car (all-components-of (entity s) (slot-value s 'Base-Ability))))
+  (car (ecs:all-components-of (entity s) (slot-value s 'Base-Ability))))
 
 
 
@@ -315,7 +315,7 @@
                    (:mundane 3)
                    (:heroic 5)
                    (:godlike 7)))))
-    (apply #'entity-add-fresh-component (append (list entity attribute-class :dots d) initargs))))
+    (apply #'ecs:entity-add-fresh-component (append (list entity attribute-class :dots d) initargs))))
 
 
 (defun entity-add-all-random-abilities (entity power-level)
@@ -326,6 +326,6 @@
    more powerful than normal people and regular heroes."
   (let* ((all-abilities '(strength dexterity health charisma manipulation resolve
                                   intelligence wisdom magic mana))
-         (fresh-abilities (remove-if (lambda (x) (all-components-of entity x)) all-abilities)))
+         (fresh-abilities (remove-if (lambda (x) (ecs:all-components-of entity x)) all-abilities)))
     (mapc (lambda (x) (entity-add-random-attribute entity x power-level)) fresh-abilities)))
 
