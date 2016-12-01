@@ -6,7 +6,7 @@
 ;;;; dungeon.
 ;;;; Entities are implemented as Lisp symbols that have a collection of 
 ;;;; Components.
-(in-package :ecs)
+(in-package :net.kaspervandenberg.merlin.ecs)
 
 
 (defvar *entities* nil

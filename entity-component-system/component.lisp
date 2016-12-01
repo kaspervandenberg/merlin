@@ -2,7 +2,7 @@
 ; vim: set filetype=lisp:
 
 ;;;; Components represent blocks of data that are part of an entity.
-(in-package :ecs)
+(in-package :net.kaspervandenberg.merlin.ecs)
 
 (defvar *components* nil
   "List of `Components` that have been constructed.")

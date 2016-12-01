@@ -3,7 +3,7 @@
 
 ;;;; Systems represent the active part of the game, systems receive an Entity 
 ;;;; and read and modify its components
-(in-package :ecs)
+(in-package :net.kaspervandenberg.merlin.ecs)
 
 (defun build-component-list (entity component-types)
   "Build an argument list by selecting the components of the given `component-types`
