@@ -15,7 +15,6 @@
                 which the player plays the role of Merlin the wizard from the 
                 King Arthur legends."
   :license "MIT license, see file LICENSE.md"
-  :serial T
   :depends-on ("usocket")
   :components ((:file "package")
                (:module "entity-component-system"
@@ -30,8 +29,8 @@
                  (:file "behaviour-tree" :depends-on ("package"))))
                (:file "text-rendering")
                (:file "wod-dice")
-               (:file "arthurian-character-names")
-               (:file "skills-and-abilities")
-               (:file "moves")
-               (:file "player-moves")
-               (:file "server")))
+               (:file "arthurian-character-names" :depends-on ("entity-component-system"))
+               (:file "skills-and-abilities" :depends-on ("entity-component-system" "wod-dice"))
+               (:file "moves" :depends-on ("entity-component-system"))
+               (:file "player-moves" :depends-on ("entity-component-system" "behaviour-tree"))
+               (:file "server" :depends-on ("entity-component-system" "behaviour-tree" "text-rendering") )))
