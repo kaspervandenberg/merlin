@@ -4,7 +4,7 @@
 ;; The different moves (i.e. `behaviour-tasks`) that the player can perform
 (in-package :merlin)
 
-(defbehaviour-task eval-player-input
+(bht:defbehaviour-task eval-player-input
   "Allow the player to input any s-expr and evaluate it."
   (format t "~%what do you do? (#eval) > ")
   (force-output)

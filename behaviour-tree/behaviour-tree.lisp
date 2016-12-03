@@ -1,7 +1,7 @@
 ;;;; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; Base: 10 -*-
 ;;;; vim: set filetype=lisp:
 
-(in-package :merlin)
+(in-package :net.kaspervandenberg.merlin.behaviour-tree)
 
 ; Behaviour tree allows to define the AI for an NPC in a tree structure.
 ; Each node is a function that can return one of three results:

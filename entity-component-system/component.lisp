@@ -32,7 +32,7 @@
 
 
 (defmethod (setf component-entity) (entity (component Component))
-  (ecs::with-existing-entity* entity
+  (with-existing-entity* entity
     (setf (slot-value component 'entity) entity)))
 
 
@@ -46,7 +46,7 @@
   "Create a fresh-instance of `component-class` and add it to the components of 
    `entity`.
    `component-initargs` are supplied to `(make-instance component-class …)`."
-  (ecs::with-existing-entity* entity
+  (with-existing-entity* entity
     (apply #'make-instance (append (list component-class :entity entity) component-initargs))))
 
 
@@ -62,7 +62,7 @@
   "Return all `Components` of `entity`.
    If `component-type` is specified, only the `Components` of `component-type`
    are returned otherwise all `Components` are returned."
-  (ecs::with-existing-entity* entity
+  (with-existing-entity* entity
     (remove-if-not (lambda (x) (eql x entity)) 
                      (get-components-of-type component-type) 
                      :key #'entity)))

@@ -21,10 +21,14 @@
                (:module "entity-component-system"
                 :components
                 ((:file "package")
-                 (:file "entity" :depends-on ("package"))))
+                 (:file "entity" :depends-on ("package"))
+                 (:file "component" :depends-on ("package" "entity"))
+                 (:file "system" :depends-on ("package" "component"))))
+               (:module "behaviour-tree"
+                :components
+                ((:file "package")
+                 (:file "behaviour-tree" :depends-on ("package"))))
                (:file "text-rendering")
-;               (:file "entity-component-system")
-               (:file "behaviour-tree")
                (:file "wod-dice")
                (:file "arthurian-character-names")
                (:file "skills-and-abilities")
