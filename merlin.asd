@@ -30,7 +30,15 @@
                (:file "text-rendering")
                (:file "wod-dice")
                (:file "arthurian-character-names" :depends-on ("entity-component-system"))
-               (:file "skills-and-abilities" :depends-on ("entity-component-system" "wod-dice"))
+               (:module "character-attributes"
+                :depends-on ("entity-component-system" "wod-dice")
+                :components
+                ((:file "package")
+                 (:file "attribute-base" :depends-on ("package"))
+                 (:file "abilities" :depends-on ("package" "attribute-base"))
+                 (:file "skills" :depends-on ("package" "attribute-base" "abilities"))
+                 (:file "accessors" :depends-on ("package" "attribute-base"))
+                 (:file "random-generators" :depends-on ("package" "attribute-base" "abilities" "skills"))))
                (:file "moves" :depends-on ("entity-component-system"))
-               (:file "player-moves" :depends-on ("entity-component-system" "behaviour-tree"))
+               (:file "player-moves" :depends-on ("entity-component-system" "behaviour-tree" "character-attributes"))
                (:file "server" :depends-on ("entity-component-system" "behaviour-tree" "text-rendering") )))

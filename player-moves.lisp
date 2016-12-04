@@ -33,7 +33,7 @@
 
 (defun gen-entity-attribute-dice-pool (attribute)
   (lambda (entity)
-    (ecs:apply-components #'attribute-dice-pool entity (list attribute))))
+    (ecs:apply-components #'attr:attribute-dice-pool entity (list attribute))))
 
 
 (defun gen-hack-and-slash (target counter-attack)
@@ -41,4 +41,4 @@
   (lambda (entity)
     (format t "You swing your weapon at ~a: ~a~%"
             target
-            (describe-success (count-successes 7 (funcall (gen-entity-attribute-dice-pool 'Strength) entity))))))
+            (describe-success (count-successes 7 (funcall (gen-entity-attribute-dice-pool 'attr:Strength) entity))))))
