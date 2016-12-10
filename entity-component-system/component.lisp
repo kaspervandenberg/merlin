@@ -22,7 +22,7 @@
 
 (defmethod initialize-instance :after ((instance Component) &rest initargs)
   (declare ( ignore initargs))
-  (push instance *components*))
+  (pushnew instance *components*))
 
 
 (defgeneric (setf component-entity) (entity component)
@@ -48,6 +48,15 @@
    `component-initargs` are supplied to `(make-instance component-class …)`."
   (with-existing-entity* entity
     (apply #'make-instance (append (list component-class :entity entity) component-initargs))))
+
+
+(defgeneric delete-component (cmp)
+  (:documentation
+    "Remove `cmp` from the list of active components"))
+
+
+(defmethod delete-component ((cmp Component))
+  (setf *components* (delete cmp *components*)))
 
 
 (defun select-entities-having (component-type)

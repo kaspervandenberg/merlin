@@ -17,6 +17,7 @@
     with-existing-entity
     Component
     entity-add-fresh-component
+    delete-component
     all-components-of
     apply-components
     defsystem))
