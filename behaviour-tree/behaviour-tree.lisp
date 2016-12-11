@@ -16,34 +16,29 @@
      (declare (ignorable entity))
      ,@body))
 
-
-(defun compose-behaviour (fComposer final-result &rest tasks)
-  "Compose a behaviour task by applying `fComposer` to the results of calling 
-   the `tasks`.  `fComposer` receives the following parameters:
-   - a function that can be called to recurse into the remaining tasks
-   - the result of the most recently executed behaviour task."
-  (labels ((f (entity tasks)
-             (if tasks
-               (let ((result (funcall (car tasks) entity)))
-                 (if (functionp result)
-                   (g (cons result (cdr tasks)))
-                   (funcall fComposer (lambda () (f entity (cdr tasks))) result)))
-               final-result))
-           (g (tasks)
-             (lambda (entity)
-               (f entity tasks))))
-    (g tasks)))
+(define-condition Not-a-Behaviour-Task (Error)
+  ((func
+     :initarg :func
+     :reader func))
+  (:documentation
+    "Condition indicates that `func` in not a Behaviour-Task #\(i.e. a function 
+     accepting a single parameter name entity#\)."))
 
 
 (defun make-behaviour-sequence (&rest tasks)
   "Make a behaviour sequence, a behavour sequences executes its `tasks` in 
    sequence, until one fails."
-  (compose-behaviour (lambda (f result)
-                       (if result
-                         (funcall f)
-                         result))
-                     t
-                     tasks))
+  (lambda (entity) 
+    (if tasks 
+      (if (functionp (car tasks))
+        (let ((result (funcall (car tasks) entity)))
+          (if result 
+            (if (functionp result)
+              (apply #'make-behaviour-sequence (cons result (cdr tasks)))
+              (funcall (apply #'make-behaviour-sequence (cdr tasks)) entity))
+            result))
+        (error Not-a-Behaviour-Task :func (car tasks)))
+      t)))
 
 
 (defun make-behaviour-selector (&rest tasks)
@@ -51,12 +46,17 @@
    starting with the first, if a tasks fails the next tasks is tried as an 
    alternative.  When one of the `tasks` succeeds, the behaviour selector stops
    trying alternatives an reutrns success to its parent."
-  (compose-behaviour (lambda (f result)
-                       (if (not result)
-                         (funcall f)
-                         result))
-                     nil
-                     tasks))
+  (lambda (entity)
+    (if tasks
+      (if (functionp (car tasks))
+        (let ((result (funcall (car tasks) entity)))
+          (if result
+            (if (functionp result)
+              (apply #'make-behaviour-selector (cons result (cdr tasks)))
+              result)
+            (funcall (apply #'make-behaviour-selector (cdr tasks)) entity)))
+        (error Not-a-Behaviour-Task :func (car tasks)))
+      nil)))
 
 
 (defbehaviour-task end-turn

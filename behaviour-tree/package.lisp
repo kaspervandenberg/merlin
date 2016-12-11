@@ -13,6 +13,7 @@
   (:use #:cl)
   (:export
     defbehaviour-task
+    Not-a-Behaviour-Task
     make-behaviour-sequence
     make-behaviour-selector
     end-turn))
