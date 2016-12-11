@@ -3,7 +3,7 @@
 
 ;;;; Add random stat components to an entity
 
-(in-package :net.kaspervandenberg.merlin.character-atrributes)
+(in-package :net.kaspervandenberg.merlin.character-attributes)
 
 (defun entity-add-random-attribute (entity attribute-class power-level &rest initargs)
   "Create a fresh instance of `attribute-type` setting its `dots` to a random

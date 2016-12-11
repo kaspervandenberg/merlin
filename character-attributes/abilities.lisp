@@ -4,7 +4,7 @@
 ;;;; Innate abilities –such as strength ans intelligence– that a character may 
 ;;;; possess.
 
-(in-package :net.kaspervandenberg.merlin.character-atrributes)
+(in-package :net.kaspervandenberg.merlin.character-attributes)
 
 
 (defability strength

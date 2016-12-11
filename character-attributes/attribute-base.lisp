@@ -3,7 +3,7 @@
 
 ;;;; Abstract base on which skills and abilities are built
 
-(in-package :net.kaspervandenberg.merlin.character-atrributes)
+(in-package :net.kaspervandenberg.merlin.character-attributes)
 
 (defclass Level-Description nil 
   ((level :initarg :level 

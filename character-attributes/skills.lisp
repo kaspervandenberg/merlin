@@ -4,7 +4,7 @@
 ;;;; Skills the character learned during his life, either by formal training or
 ;;;; via experience and practice.
 
-(in-package :net.kaspervandenberg.merlin.character-atrributes)
+(in-package :net.kaspervandenberg.merlin.character-attributes)
 
 
 ; Skills from Loseth's Dungeoneer game (or game concept, work in progress); a 

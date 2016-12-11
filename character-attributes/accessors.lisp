@@ -3,7 +3,7 @@
 
 ;;;; Functions to retrieve and make use of attributes.
 
-(in-package :net.kaspervandenberg.merlin.character-atrributes)
+(in-package :net.kaspervandenberg.merlin.character-attributes)
 
 (defun print-dots (n)
   "Print a sequence of '⚫' that indicates a character's strength in

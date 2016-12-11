@@ -1,7 +1,7 @@
 ; -*- Mode: Lisp; Syntax: ANSI-Common-Lisp; Base: 10 -*-
 ; vim: set filetype=lisp:
 
-(defpackage #:net.kaspervandenberg.merlin.character-atrributes
+(defpackage #:net.kaspervandenberg.merlin.character-attributes
   (:nicknames #:merlin-character-attributes #:attr)
   (:documentation
     "Components that represent attributes that a player character and NPCs may
