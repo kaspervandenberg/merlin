@@ -19,5 +19,6 @@
     entity-add-fresh-component
     delete-component
     all-components-of
+    entity
     apply-components
     defsystem))
