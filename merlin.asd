@@ -41,4 +41,5 @@
                  (:file "random-generators" :depends-on ("package" "attribute-base" "abilities" "skills"))))
                (:file "moves" :depends-on ("entity-component-system"))
                (:file "player-moves" :depends-on ("entity-component-system" "behaviour-tree" "character-attributes"))
+               (:file "behaviour-component" :depends-on ("entity-component-system" "behaviour-tree"))
                (:file "server" :depends-on ("entity-component-system" "behaviour-tree" "text-rendering") )))

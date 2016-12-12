@@ -3,6 +3,8 @@
     "Package for the interactive story telling game about the Arthurian Merlin Ambrosius.")
   (:use :cl)
   (:export
+    Behaviour
+    execute-behaviour
     start-server
     entity-add-random-character-identity
     Move-in-Progress
