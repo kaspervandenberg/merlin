@@ -12,14 +12,20 @@
     (eval pl-input)))
 
 
-(defun gen-menu-selector (options)
+(defun gen-menu-selector (&rest options)
   "Present the player a menu from which he/she can choose his//her next action.
    `options` is an alist of available options.  Each option is a list of three
    parts: a keyword (e.g. ':hack-n-slash') that the player can type to select 
    the option; a description of the option; and a behavior-task that defines the
-   effect of the action"
+   effect of the action.
+   For example, given two behaviour tasks, #'dance and #'hack-n-slash, the 
+   following presents a two option menu to the player:
+   #\(gen-menu-selector
+     #\(list :dance #\"Dance#\" #\#'dance#\)
+     #\(list :hack-n-slash #\"Attack#\" #\#'hack-n-slash#\)#\)
+   the player can enter either :dance or :hack-n-slash to choose an option."
   (labels ((prompt-user ()
-             (format t "Choose among these options:~%~:{~a -->~16T~a~%~}What do you do? > " options)
+             (format t "Choose among these options:~%~:{~a -->~20T~a~%~}What do you do? > " options)
              (force-output)
              (let ((inp (assoc (read) options)))
                (if (not inp)
