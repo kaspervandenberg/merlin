@@ -36,10 +36,10 @@
      `entity`."))
             
 (defmethod attribute-dice-pool ((ablty Ability))
-  (dice-pool (attribute-dots ablty)))
+  (dice:dice-pool (attribute-dots ablty)))
 
 (defmethod attribute-dice-pool ((skl Skill))
-  (dice-pool (+ (attribute-dots (get-skill-ability skl))
-                (attribute-dots skl))))
+  (dice:dice-pool (+ (attribute-dots (get-skill-ability skl))
+                     (attribute-dots skl))))
 
 

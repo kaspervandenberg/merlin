@@ -28,10 +28,13 @@
                 ((:file "package")
                  (:file "behaviour-tree" :depends-on ("package"))))
                (:file "text-rendering")
-               (:file "wod-dice")
+               (:module "dice"
+                :components
+                ((:file "package")
+                 (:file "wod-dice" :depends-on ("package"))))
                (:file "arthurian-character-names" :depends-on ("entity-component-system"))
                (:module "character-attributes"
-                :depends-on ("entity-component-system" "wod-dice")
+               :depends-on ("entity-component-system" "dice")
                 :components
                 ((:file "package")
                  (:file "attribute-base" :depends-on ("package"))

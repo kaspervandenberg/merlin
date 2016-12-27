@@ -1,6 +1,6 @@
 ;;; The dice roll system of World of Darkness, i.e. dice pools of d10 dice.
 
-(in-package :merlin)
+(in-package :net.kaspervandenberg.merlin.dice)
 
 (defun dice (n-sides)
   "A dice has a number of sides, `n-sides`, when evaluated `(dice n) returns a random integer in the range [1..n]."
