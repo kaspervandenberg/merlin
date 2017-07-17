@@ -21,7 +21,7 @@
      :initarg :func
      :reader func))
   (:documentation
-    "Condition indicates that `func` in not a Behaviour-Task #\(i.e. a function 
+    "Condition indicates that `func` is not a Behaviour-Task #\(i.e. a function 
      accepting a single parameter name entity#\)."))
 
 
@@ -37,7 +37,7 @@
               (apply #'make-behaviour-sequence (cons result (cdr tasks)))
               (funcall (apply #'make-behaviour-sequence (cdr tasks)) entity))
             result))
-        (error Not-a-Behaviour-Task :func (car tasks)))
+        (error 'Not-a-Behaviour-Task :func (car tasks)))
       t)))
 
 
@@ -55,7 +55,7 @@
               (apply #'make-behaviour-selector (cons result (cdr tasks)))
               result)
             (funcall (apply #'make-behaviour-selector (cdr tasks)) entity)))
-        (error Not-a-Behaviour-Task :func (car tasks)))
+        (error 'Not-a-Behaviour-Task :func (car tasks)))
       nil)))
 
 
@@ -64,5 +64,3 @@
   (lambda (entity)
     (declare (ignore entity))
     t))
-
-
