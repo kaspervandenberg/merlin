@@ -61,7 +61,7 @@
            :report (lambda (str) (format str "Add entity ~a to `*entities*` and retry ~a." entity func)) 
            :test (lambda (e) (typep e 'Unknown-Entity)) 
            (progn 
-             (create-entity :name entity) 
+             (create-entity entity) 
              (f)))))) 
     (f)))
 
