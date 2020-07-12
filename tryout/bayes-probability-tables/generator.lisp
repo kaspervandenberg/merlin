@@ -34,12 +34,11 @@
 
 (defun calc-probability (weight-table values)
   (reduce
-   #'+
+   #'(lambda (acc x) (+ acc (cadr x)))
    (remove-if
-    #'(lambda (x) (not (member x values)))
-    (cadr weight-table)
-    :key #'cadr)
-   :key #'cadr))
+    #'(lambda (x) (not (member (car x) values)))
+    (cadr weight-table))
+   :initial-value 0))
 
 (defun simplify (weight-table)
   (list
@@ -55,8 +54,25 @@
   (reduce
    #'(lambda (acc x) (+ acc x))
    (mapcar
-    #'car
+    #'cadr
     (cadr weight-table))))
 
-(defun calc-other (weight-table)
+(defun calc-probability-other (weight-table)
   (- 1 (sum-weights weight-table)))
+
+(defun distinct-values (weight-table other)
+  (let ((weight-table-values (get-values weight-table))
+	(other-values (get-values other)))
+    (remove-if
+     (lambda (x) (member x other-values))
+     weight-table-values)))
+
+(defun distinct-value-probabilities (weight-table other)
+  (let ((other-probability (calc-probability-other other))
+	(values (distinct-values weight-table other)))
+    (mapcar
+     (lambda (x)
+       (list x
+	     (* (calc-probability weight-table (list x))
+		other-probability)))
+     values)))
