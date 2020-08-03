@@ -92,3 +92,20 @@
     #'(lambda (x)
 	(list x (* (calc-probability weight-table (list x)) factor)))
     (get-values weight-table))))
+
+(defun merge-weight-tables (weight-tables)
+  (let ((factor (/ 1 (length weight-tables)))
+	(variable (get-random-variable (car weight-tables))))
+    (simplify
+     (list
+      variable
+      (mapcan
+       #'(lambda (weight-table)
+	   (let ((other-tables (remove weight-table weight-tables)))
+	     (append
+	      (probability-list (mul-weight-table weight-table factor))
+	      (mapcan
+	       #'(lambda (other-table)
+		   (mul-probability-list (distinct-value-probabilities other-table weight-table) factor))
+	       other-tables))))
+       weight-tables)))))
