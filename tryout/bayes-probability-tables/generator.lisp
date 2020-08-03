@@ -49,8 +49,8 @@
    (mapcar
     #'(lambda (x)
 	(list
-	 (calc-probability weight-table (list x))
-	 x))
+	 x
+	 (calc-probability weight-table (list x))))
     (get-values weight-table))))
 
 (defun sum-weights (weight-table)
