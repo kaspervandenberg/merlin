@@ -32,12 +32,15 @@
      (cadr weight-table))
     :initial-value nil)))
 
+(defun probability-list (weight-table)
+  (cadr weight-table))
+
 (defun calc-probability (weight-table values)
   (reduce
    #'(lambda (acc x) (+ acc (cadr x)))
    (remove-if
     #'(lambda (x) (not (member (car x) values)))
-    (cadr weight-table))
+    (probability-list weight-table))
    :initial-value 0))
 
 (defun simplify (weight-table)
