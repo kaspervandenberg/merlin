@@ -76,3 +76,16 @@
 	     (* (calc-probability weight-table (list x))
 		other-probability)))
      values)))
+
+(defun mul-probability-list (probabilities factor)
+  (mapcar
+   #'(lambda (x) (list (car x) (* factor (cadr x))))
+   probabilities))
+
+(defun mul-weight-table (weight-table factor)
+  (list
+   (get-random-variable weight-table)
+   (mapcar
+    #'(lambda (x)
+	(list x (* (calc-probability weight-table (list x)) factor)))
+    (get-values weight-table))))
