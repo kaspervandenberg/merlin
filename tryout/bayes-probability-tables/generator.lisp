@@ -20,6 +20,15 @@
      (red 1/18)
      (black 1/9))))
 
+(defvar conditional-weight-table-material
+  '(material
+    ((sand
+      (((color red) 1/4)
+       ((color blue) 1/3)))
+     (metal
+      (((color red) 1/6)
+       ((color black) 1/2))))))
+
 (defun get-random-variable (weight-table)
   (car weight-table))
 
