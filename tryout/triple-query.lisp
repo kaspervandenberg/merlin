@@ -74,3 +74,13 @@ from `target-triples` whose subject occurs as object in `source-triples`.
 					       (sb-ext:muffle-conditions sb-ext:compiler-note))
 				      (member-triple source-triples from o))))))
     (select-triple-if f-chain target-triples)))
+
+
+(defun triple-subject (triple)
+  (car triple))
+
+(defun triple-predicate (triple)
+  (cadr triple))
+
+(defun triple-object (triple)
+  (caddr triple))
