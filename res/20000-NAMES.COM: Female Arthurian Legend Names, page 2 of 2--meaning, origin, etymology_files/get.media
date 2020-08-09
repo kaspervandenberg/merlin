@@ -1,0 +1,3 @@
+{var dz=document;
+dz.writeln("<a href=\"http://media.fastclick.net/w/click.here?cid=624950&mid=2123009&m=1&sid=8085&c=0&tp=5&UD=WhIxNzYyMDMxMjE0NjkzOTQ5NzGIAYHKgQGQAbaSJpgBlT_gAQGoAQXwAQCyAg8xOTUuMjQwLjEyNC4yMjXwAgGYAwA&upsid=176203121469394971\" target=\"_top\"><img src=\"http://cdn.fastclick.net/content/adv/aids/618/60618/media2047945.jpg\" border=0 width=728 height=90 alt=\"\"></a><script type=\"text/javascript\">(function(){document.write('<span id=\"1921313037\"><sc'+'ript type=\"text/javascript\" src=\"'+((\"https:\"==document.location.protocol)?\"https://s-\":\"http://\")+'usweb.dotomi.com/adinfo/script/prod/?w=728&h=90&cid=2000&plc=tr&lang=en-US&loc=nl&optout_options=global\"></scr'+'ipt></span>');}());<\/script>");
+dz.writeln("");}

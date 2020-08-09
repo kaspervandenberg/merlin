@@ -1,0 +1,35 @@
+body b{
+  color:#337ab7;
+}
+body{
+  color:#337ab7!important;
+}
+p{
+  color:#337ab7!important;
+}
+ol a{
+  font-weight:bold;
+}
+li{
+  color:#337ab7!important;
+}
+body li {
+  #337ab7!important;
+}
+h1 u{
+  color:black;
+}
+table{
+  border:none;
+}
+.five{
+  font-weight:bold;
+  color:black;
+  font-size:25px;
+}
+.two{
+  color:#337ab7;
+}
+a:hover{
+  color:#000000;
+}
