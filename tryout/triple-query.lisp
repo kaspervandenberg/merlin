@@ -49,7 +49,6 @@ Only the specified arguments are used in the comparison when a part of the tripl
   (declare (ignore subj pred obj))
   (member-triple-if (apply #'gen-triple-eq-predicate triple-comparison) triples))
 
-
 (defun chain-triples (source-triples
 		      target-triples
 		      &key
@@ -63,12 +62,15 @@ from `target-triples` whose subject occurs as object in `source-triples`.
 "
   (let ((f-chain (cond
 		   ((eq to :subject) (lambda (s p o)
-				       (declare (ignore p o))
+				       (declare (ignore p o)
+						(sb-ext:muffle-conditions sb-ext:compiler-note))
 				       (member-triple source-triples from s)))
 		   ((eq to :predicate) (lambda (s p o)
-					 (declare (ignore s o))
+					 (declare (ignore s o)
+						  (sb-ext:muffle-conditions sb-ext:compiler-note))
 					 (member-triple source-triples from p)))
 		   ((eq to :object) (lambda (s p o)
-				      (declare (ignore s p))
+				      (declare (ignore s p)
+					       (sb-ext:muffle-conditions sb-ext:compiler-note))
 				      (member-triple source-triples from o))))))
     (select-triple-if f-chain target-triples)))
